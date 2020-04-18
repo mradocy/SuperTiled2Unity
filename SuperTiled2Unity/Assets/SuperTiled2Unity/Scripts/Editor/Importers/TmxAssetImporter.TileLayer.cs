@@ -173,7 +173,19 @@ namespace SuperTiled2Unity.Editor
             // Instantiate object to build all colliders for this chunk
             m_CurrentCollisionBuilder = new CollisionBuilder(goTilemap, m_TilePolygonDatabase, SuperImportContext);
 
-            var tileIds = ReadTileIdsFromChunk(chunk);
+            List<uint> tileIds = ReadTileIdsFromChunk(chunk);
+
+            // preserve tile ids of layer
+            TileIdsChunk tileIdsChunk = new TileIdsChunk() {
+                _x = chunk.X,
+                _y = chunk.Y,
+                _width = chunk.Width,
+                _height = chunk.Height,
+                _tileIds = tileIds
+            };
+            SuperTileLayer superTileLayer = goTilemap.GetComponentInParent<SuperTileLayer>();
+            superTileLayer.InternalAddTileIdsChunk(tileIdsChunk);
+
             PlaceTiles(goTilemap, chunk, tileIds);
 
             m_CurrentCollisionBuilder.Build(this);
