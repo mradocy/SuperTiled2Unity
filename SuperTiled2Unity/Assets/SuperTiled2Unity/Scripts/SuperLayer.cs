@@ -19,6 +19,19 @@ namespace SuperTiled2Unity
         [ReadOnly]
         public bool m_Visible;
 
+        /// <summary>
+        /// Gets a reference to the parent's SuperMap.
+        /// </summary>
+        public SuperMap SuperMap {
+            get {
+                if (_superMap == null) {
+                    _superMap = this.GetComponentInParent<SuperMap>();
+                }
+
+                return _superMap;
+            }
+        }
+
         public float CalculateOpacity()
         {
             float opacity = 1.0f;
@@ -30,5 +43,7 @@ namespace SuperTiled2Unity
 
             return opacity;
         }
+
+        private SuperMap _superMap = null;
     }
 }

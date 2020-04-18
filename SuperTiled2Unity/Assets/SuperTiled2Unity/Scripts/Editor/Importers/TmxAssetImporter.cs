@@ -83,6 +83,8 @@ namespace SuperTiled2Unity.Editor
                     ProcessMapLayers(m_GridComponent.gameObject, xMap);
                     PostProccessMapLayers(m_GridComponent.gameObject);
                 }
+
+                m_MapComponent.m_CustomTiles = m_GlobalTileDatabase.GetCustomTiles();
             }
         }
 

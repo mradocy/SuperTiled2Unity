@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class TestScript : MonoBehaviour {
 
@@ -20,8 +21,11 @@ public class TestScript : MonoBehaviour {
 
         SuperTileLayer[] superTileLayers = FindObjectsOfType<SuperTileLayer>();
         SuperTileLayer testTileIdLayer = superTileLayers.FirstOrDefault(stl => stl.gameObject.name == "TestTileId");
-        Debug.Log(testTileIdLayer.GetTileId(0, 0));
-
+        int tileId = testTileIdLayer.GetTileId(0, 0);
+        Debug.Log(tileId);
+        SuperTile customTile = testTileIdLayer.SuperMap.GetCustomTile(tileId);
+        string propVal = customTile.GetPropertyValueAsString("testProp");
+        Debug.Log(propVal);
     }
 
     /// <summary>

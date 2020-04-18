@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace SuperTiled2Unity
@@ -47,6 +48,13 @@ namespace SuperTiled2Unity
         [ReadOnly]
         public int m_NextObjectId;
 
+        [HideInInspector]
+        public List<IdSuperTilePair> m_CustomTiles;
+
+        private void Awake() {
+            this.MapCustomTiles();
+        }
+
         private void Start()
         {
             // This is a hack so that Unity does not falsely report prefab instance differences from our importer map
@@ -68,6 +76,24 @@ namespace SuperTiled2Unity
             pos3.y = -pos3.y;
 
             return pos3;
+        }
+
+        /// <summary>
+        /// Gets the custom tile with the given id.  Returns null if the tile with the id did not have custom properties.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SuperTile GetCustomTile(int id) {
+            if (_mappedCustomTiles == null) {
+                this.MapCustomTiles();
+            }
+
+            SuperTile customTile;
+            if (_mappedCustomTiles.TryGetValue(id, out customTile)) {
+                return customTile;
+            }
+
+            return null;
         }
 
         private Vector3Int TiledCellToGridCell(int x, int y)
@@ -152,5 +178,19 @@ namespace SuperTiled2Unity
             // Simple maps (like orthongal do not transform indices into other spaces)
             return new Vector3Int(x, y, 0);
         }
+
+        /// <summary>
+        /// Makes a mapping out of the custom tiles, keyed by id.
+        /// </summary>
+        private void MapCustomTiles() {
+            _mappedCustomTiles = new Dictionary<int, SuperTile>();
+            if (m_CustomTiles != null) {
+                foreach (IdSuperTilePair pair in m_CustomTiles) {
+                    _mappedCustomTiles[pair._id] = pair._superTile;
+                }
+            }
+        }
+
+        private Dictionary<int, SuperTile> _mappedCustomTiles;
     }
 }
